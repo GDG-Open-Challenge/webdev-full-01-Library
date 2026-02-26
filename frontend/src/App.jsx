@@ -183,7 +183,7 @@ function App() {
                 <div key={book._id} className="book-card">
                   <h3>{book.title}</h3>
                   <p className="author">by {book.author}</p>
-                  {book.year && <p className="year">{book.year}</p>}
+                  {book.publication_year && <p className="year">{book.publication_year}</p>}
                   <div className="book-actions">
                     <button onClick={() => handleEdit(book)}>Edit</button>
                     <button className="delete-btn" onClick={() => handleDelete(book._id)}>Delete</button>

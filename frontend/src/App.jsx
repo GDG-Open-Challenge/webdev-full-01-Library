@@ -57,11 +57,11 @@ function App() {
     try {
       if (isEditing) {
         const response = await axios.put(`/api/books/${editingId}`, formData);
-        setBooks(books.map(b => b._id === editingId ? response.data : b));
+        setBooks(prev => prev.map(b => b._id === editingId ? response.data : b));
         setSuccess('Book updated successfully');
       } else {
         const response = await axios.post('/api/books', formData);
-        setBooks([...books, response.data]);
+        setBooks(prev => [...prev, response.data]);
         setSuccess('Book added successfully');
       }
 
@@ -96,7 +96,7 @@ function App() {
     setSuccess('');
 
     axios.delete(`/api/books/${id}`).then(() => {
-      setBooks(books.filter(b => b._id !== id));
+      setBooks(prev => prev.filter(b => b._id !== id));
       setSuccess('Book deleted successfully');
     }).catch(err => {
       setError('Failed to delete book');

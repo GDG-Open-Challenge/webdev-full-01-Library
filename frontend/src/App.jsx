@@ -151,7 +151,7 @@ function App() {
             <div className="form-group">
               <label htmlFor="year">Publication Year</label>
               <input
-                type="text"
+                type="number"
                 id="year"
                 name="publication_year"
                 value={formData.publication_year}

@@ -62,9 +62,14 @@ app.put('/api/books/:id', (req, res) => {
       book.title = req.body.title || book.title;
       book.author = req.body.author || book.author;
       book.year = req.body.publication_year || book.year;
-      book.save().then(updatedBook => {
-        res.json(updatedBook);
-      });
+      book
+    .save()
+        .then(updatedBook => {
+          res.json(updatedBook);
+        })
+        .catch((err) => {
+          res.json(err);
+        });
     } else {
       res.status(404).json({ error: 'Book not found' });
     }

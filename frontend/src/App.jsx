@@ -9,7 +9,7 @@ function App() {
   const [formData, setFormData] = useState({
     title: '',
     author: '',
-    publication_year: ''
+    year: ''
   });
   const [isEditing, setIsEditing] = useState(false);
   const [editingId, setEditingId] = useState(null);
@@ -85,6 +85,7 @@ function App() {
     });
     setIsEditing(true);
     setEditingId(book._id);
+    window.scrollTo({ top: 0, behavior: "smooth" });  
   };
 
   const handleDelete = (id) => {

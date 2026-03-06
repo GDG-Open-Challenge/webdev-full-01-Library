@@ -157,6 +157,7 @@ function App() {
                 value={formData.publication_year}
                 onChange={handleInputChange}
                 placeholder="e.g., 2024"
+                min="1900"
               />
             </div>
 

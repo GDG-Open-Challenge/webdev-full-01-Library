@@ -61,11 +61,13 @@ function App() {
     try {
       if (isEditing) {
         const response = await axios.put(`/api/books/${editingId}`, formData);
-        setBooks(books.map(b => b._id === editingId ? response.data : b));
+        setBooks(prevBooks =>
+          prevBooks.map(b => b._id === editingId ? response.data : b)
+        );
         setSuccess('Book updated successfully');
       } else {
         const response = await axios.post('/api/books', formData);
-        setBooks([...books, response.data]);
+        setBooks(prevBooks => [...prevBooks, response.data]);
         setSuccess('Book added successfully');
       }
 
@@ -101,7 +103,9 @@ function App() {
 
     axios.delete(`/api/books/${id}`).then(() => {
       if (!isMounted.current) return;
-      setBooks(books.filter(b => b._id !== id));
+      setBooks(prevBooks =>
+        prevBooks.filter(b => b._id !== id)
+      );
       setSuccess('Book deleted successfully');
     }).catch(err => {
       if (!isMounted.current) return;

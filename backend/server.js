@@ -56,24 +56,24 @@ app.post('/api/books', async (req, res) => {
   res.status(201).json(savedBook);
 });
 
-app.put('/api/books/:id', (req, res) => {
-  Book.findById(req.params.id).then(book => {
-    if (book) {
-      book.title = req.body.title || book.title;
-      book.author = req.body.author || book.author;
-      book.year = req.body.publication_year || book.year;
-      book
-    .save()
-        .then(updatedBook => {
-          res.json(updatedBook);
-        })
-        .catch((err) => {
-          res.json(err);
-        });
-    } else {
-      res.status(404).json({ error: 'Book not found' });
+app.put('/api/books/:id', async (req, res) => {
+  try {
+    const book = await Book.findById(req.params.id);
+
+    if (!book) {
+      return res.status(404).json({ error: 'Book not found' });
     }
-  }).catch(err => res.status(500).json({ error: err.message }));
+
+    book.title = req.body.title || book.title;
+    book.author = req.body.author || book.author;
+    book.year = req.body.publication_year || book.year;
+
+    const updatedBook = await book.save();
+
+    res.json(updatedBook);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to update book' });
+  }
 });
 
 app.delete('/api/books/:id', async (req, res) => {

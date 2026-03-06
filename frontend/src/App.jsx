@@ -87,20 +87,21 @@ function App() {
     setEditingId(book._id);
   };
 
-  const handleDelete = (id) => {
-    if (!confirm('Are you sure you want to delete this book?')) {
-      return;
-    }
+  const handleDelete = async (id) => {
+    if (!confirm('Are you sure you want to delete this book?')) return;
 
-    setError('');
-    setSuccess('');
+    try {
+      setError('');
+      setSuccess('');
 
-    axios.delete(`/api/books/${id}`).then(() => {
-      setBooks(books.filter(b => b._id !== id));
+      await axios.delete(`/api/books/${id}`);
+
+      setBooks(prevBooks => prevBooks.filter(b => b._id !== id));
       setSuccess('Book deleted successfully');
-    }).catch(err => {
+
+    } catch (err) {
       setError('Failed to delete book');
-    });
+    }
   };
 
   const handleCancel = () => {

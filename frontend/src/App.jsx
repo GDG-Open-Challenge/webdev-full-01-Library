@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useRef } from 'react';
 import axios from 'axios';
 
 function App() {
+  const isMounted = useRef(true);
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -16,6 +17,9 @@ function App() {
 
   useEffect(() => {
     fetchBooks();
+    return () => {
+      isMounted.current = false;
+  };
   }, []);
 
   useEffect(() => {
@@ -87,7 +91,7 @@ function App() {
     setEditingId(book._id);
   };
 
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
     if (!confirm('Are you sure you want to delete this book?')) {
       return;
     }
@@ -96,9 +100,11 @@ function App() {
     setSuccess('');
 
     axios.delete(`/api/books/${id}`).then(() => {
+      if (!isMounted.current) return;
       setBooks(books.filter(b => b._id !== id));
       setSuccess('Book deleted successfully');
     }).catch(err => {
+      if (!isMounted.current) return;
       setError('Failed to delete book');
     });
   };

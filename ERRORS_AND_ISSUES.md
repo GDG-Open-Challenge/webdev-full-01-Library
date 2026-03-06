@@ -100,22 +100,25 @@ This allows users to enter non-numeric values like "abc" or "1925x", which will 
 ---
 
 ## Error 5: API Response Structure Mismatch (Frontend/Backend - Breaking)
-**Location:** `backend/server.js` (line 47) and `frontend/src/App.jsx` (line 59)
+**Location:** `backend/server.js` (line 47) and `frontend/src/App.jsx`
 
-The frontend sends publication year as `publication_year` but the backend schema stores it as `year`. When the API returns the saved book, the field name is different:
+The frontend sends the publication year as `publication_year` while the backend schema stores it as `year`. When the API returns the saved book, the field name differs, causing inconsistencies between the frontend form data and the backend response.
 
-Backend POST endpoint:
+### Fix
+The frontend normalizes the API response by mapping the backend `year` field to `publication_year` when updating the state. This ensures consistent data handling when adding or editing books.
+
+Updated frontend handling:
+
 ```javascript
-app.post('/api/books', async (req, res) => {
-  const newBook = new Book({
-    title: req.body.title,
-    author: req.body.author,
-    year: req.body.publication_year
-  });
-  
-  const savedBook = await newBook.save();
-  res.status(201).json(savedBook);
-});
+const response = await axios.post('/api/books', formData);
+
+setBooks(prevBooks => [
+  ...prevBooks,
+  {
+    ...response.data,
+    publication_year: response.data.year
+  }
+]);
 ```
 
 Frontend form submission:

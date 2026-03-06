@@ -46,14 +46,19 @@ app.get('/api/books/:id', async (req, res) => {
 });
 
 app.post('/api/books', async (req, res) => {
-  const newBook = new Book({
-    title: req.body.title,
-    author: req.body.author,
-    year: req.body.publication_year
-  });
-  
-  const savedBook = await newBook.save();
-  res.status(201).json(savedBook);
+  try {
+    const newBook = new Book({
+      title: req.body.title,
+      author: req.body.author,
+      year: req.body.year
+    });
+
+    const savedBook = await newBook.save();
+
+    res.status(201).json(savedBook);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 app.put('/api/books/:id', (req, res) => {
